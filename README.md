@@ -10,13 +10,13 @@ Time-frequency analysis is a fundamental topic in non-stationary signal processi
 
 > Here for illustration we generate a summation of two Gaussian-modulated chirp signal, with gradually increasing frequencies starting from 5Hz and 40Hz, respectively. The resulting signal is shown below.
 >
-> ![signal](img\signal.png)
+> ![signal](img/signal.png)
 >
 > The STFT results is also illustrated below. From the STFT spectrum, the changes of the frequencies over time can be roughly seen; however, due to the uncertainty principle, the frequency and temporal resolutions can not be fine enough at the same time. The Fourier analysis treats the non-linear modulation linearly, resulting in a blurry spectrum (consisting of a lot of energy leakage and unnecessary harmonics).
 >
-> ![STFT_spectrum](img\STFT_spectrum.png)
+> ![STFT_spectrum](img/STFT_spectrum.png)
 
-![readme_formula1](img\readme_formula1.png)
+![readme_formula1](img/readme_formula1.png)
 
 However, the results produced by Hilbert transform are not always physically meaningful. In Huang et al. [1], they suggest that the signal should be decomposed into several components, such that each component (designated as intrinsic mode function (IMF) ) satisfies:
 
@@ -27,15 +27,15 @@ Therefore, meaningful instantaneous frequency can be obtained from the Hilbert t
 
 The above algorithm is call empirical mode decomposition (EMD) by [1]. After performing the Hilbert transform, we indeed have a decomposition of the form
 
-![readme_formula2](img\readme_formula2.png)
+![readme_formula2](img/readme_formula2.png)
 
 > Here is an illustration for the EMD on the mixing chirps. We can see than the two modulated chirps are successfully separated and represented by `IMF 0` and `IMF 1`. Other IMFs and the residual is indeed ignorable since their scales are small relative to the original data.
 >
-> ![EMD](img\EMD.png)
+> ![EMD](img/EMD.png)
 >
 > Now let's further visualize the time-frequency spectrum. We discard the spectrum in the first an d last 0.25s since the endpoint effect severely corrupt the low-frequency components in the spectrum.
 >
-> ![Hilbert_spectrum](img\Hilbert_spectrum.png)![Hilbert_marginal](img\Hilbert_marginal.png)
+> ![Hilbert_spectrum](img/Hilbert_spectrum.png)![Hilbert_marginal](img/Hilbert_marginal.png)
 >
 > In the illustration, the variation of frequencies over time can be clearly seen - one increases linearly from 40Hz, reaching 50Hz at 1.2s, and the other increases quadratically from 5Hz, reaching 10Hz at 0.8s. From the color map one can observe that both of their amplitudes are modulated. All of these match our parameters for the chirps. The marginal spectrum also show two peaks of the frequency distribution. 
 
