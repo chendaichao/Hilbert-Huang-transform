@@ -33,7 +33,7 @@ The above algorithm is call empirical mode decomposition (EMD) by [1]. Then, the
 >
 > ![EMD](img/EMD.png)
 >
-> Now let's further visualize the time-frequency spectrum. We discard the spectrum in the first an d last 0.25s since the endpoint effect severely corrupt the low-frequency components in the spectrum.
+> Now let's further visualize the time-frequency spectrum. We discard the spectrum in the first and last 0.25s since the endpoint effect would severely corrupt the low-frequency components in the spectrum.
 >
 > ![Hilbert_spectrum](img/Hilbert_spectrum.png)In the illustration, the variation of frequencies over time can be clearly seen - one increases linearly from 40Hz, reaching 50Hz at 1.2s, and the other increases quadratically from 5Hz, reaching 10Hz at 0.8s. From the color map one can observe that both of their amplitudes are modulated. All of these match our parameters for the chirps. In terms of the marginal spectrum, it also show two peaks of the frequency distribution, very similar to the Fourier transform result. 
 
@@ -53,7 +53,7 @@ The example of the mixing chirps shown above is given in the *Jupyter notebook* 
 
 **Update**
 
-2020.10.17 Bug fix. Use pytorch to perform tensor computation on GPU.
+2020.10.17 Bug fix. Use pytorch to support tensor computation on GPU.
 
 
 
