@@ -6,13 +6,13 @@ A demo of using Hilbert-Huang Transform (HHT) for non-stationary and non-linear 
 
 ## Introduction
 
-Time-frequency analysis is a fundamental topic in non-stationary signal processing.  Typical window-based methods (including short-time Fourier transform and wavelet transform)  assume that the system is linear, and thus they compute the integration of the signal multiplied by a family of predefined base functions (indexed by time and frequency) to quantify the time-frequency distribution. Defining the time-frequency spectrum by integration, however, unavoidably results in the uncertainty rule: the frequency and temporal resolution cannot be too fine at the same time. In addition, linear assumption is not always justified, especially when modulation exists. Although one might argue that for modulated signal there still exists a representation with the base functions (say, for example cos A cos B = 1/2 cos(A+B) + 1/2 cos(A-B), just a frequency shift), this would unnecessarily induce many annoying harmonics, which are indeed mathematical artifacts.
+Time-frequency analysis is a fundamental topic in non-stationary signal processing.  Typical window-based methods (including short-time Fourier transform and wavelet transform)  assume that the system is linear, and thus they linearly project the signal into a family of predefined base functions (indexed by time and frequency) via integral transforms. Defining the time-frequency spectrum by integration, however, unavoidably results in the uncertainty rule: the energy distribution cannot concentrate well  well at the frequency and the temporal axis at the same time. In addition, linear assumption is not always justified, especially when nonlinear modulation exists. Although one might argue that for modulated signal there still exists a representation with the base functions (say, for example cos A cos B = 1/2 cos(A+B) + 1/2 cos(A-B), just a frequency shift), this would unnecessarily induce many annoying harmonics, which are indeed mathematical artifacts.
 
 > Here we generate a mixture of two Gaussian-modulated chirp signals, with gradually increasing frequencies starting from 5Hz and 40Hz, respectively. The resulting signal is shown below.
 >
 > ![signal](img/signal.png)
 >
-> The STFT results is also illustrated below. From the STFT spectrum, we can roughly seen the changes of the frequencies over time; however, due to the uncertainty principle, the frequency and temporal resolutions can not be fine enough at the same time. The Fourier analysis treats the non-linear modulation linearly, resulting in a blurry spectrum (consisting of a lot of energy leakage and unnecessary harmonics).
+> The STFT results is also illustrated below. From the STFT spectrum, we can roughly seen the changes of the frequencies over time; however, due to the uncertainty principle, the frequency and temporal resolutions can not be fine enough at the same time. The Fourier analysis treats the non-linear modulation linearly, resulting in a blurred spectrum (consisting of a lot of energy leakage and unnecessary harmonics).
 >
 > ![STFT_spectrum](img/STFT_spectrum.png)
 
@@ -35,7 +35,9 @@ The above algorithm is call empirical mode decomposition (EMD) by [1]. Then, the
 >
 > Now let's further visualize the time-frequency spectrum. We discard the spectrum in the first and last 0.25s since the endpoint effect would severely corrupt the low-frequency components in the spectrum.
 >
-> ![Hilbert_spectrum](img/Hilbert_spectrum.png)In the illustration, the variation of frequencies over time can be clearly seen - one increases linearly from 40Hz, reaching 50Hz at 1.2s, and the other increases quadratically from 5Hz, reaching 10Hz at 0.8s. From the color map one can observe that both of their amplitudes are modulated. All of these match our parameters for the chirps. In terms of the marginal spectrum, it also show two peaks of the frequency distribution, very similar to the Fourier transform result. 
+> ![Hilbert_spectrum](img/Hilbert_spectrum+marginal.png)
+>
+> In the illustration, the variation of frequencies over time can be clearly seen and consistent with our configuration - one increases linearly from 40Hz, reaching 50Hz at 1.2s, and the other increases quadratically from 5Hz, reaching 10Hz at 0.8s. From the color map one can observe that both of their amplitudes are modulated by a Gaussian envelope. In terms of the marginal spectrum, it also show two peaks of the frequency distribution, very similar to the Fourier transform result. 
 
 
 
@@ -47,13 +49,39 @@ The example of the mixing chirps shown above is given in the *Jupyter notebook* 
 
 
 
+**Implementation details**:
+
+* The stopping criteria of sifting process for extracting a single IMF (the center line is close enough to zero) is not used. The number of sifting times ( `num_sifting` ) is specified to be 10 by default.
+* For convenience, the stopping criteria of EMD (the residual is monotonic or ignorable) is not used either.  So the number of IMFs to be extracted (`num_imf`) should be parsed to `torchHHT.hht.hilbert_huang`.
+* We use cubic Hermite spline to extract the empirical envelope. To avoid the empirical envelope grows too high or drop too low at the two end, we force the gradient of the envelope function to be zero at -T/2 and T+T/2 (assuming that the total time span of the signal is [0, T]).
+
+
+
+**Note for acceleration with GPU** 
+
+The whole HHT are based on pytorch tensor computation. If you want to make use of GPU for acceleration, please put the signal on GPU before parsed into the relevant function. Here is an example:
+
+```python
+x = x.cuda()
+imfs, imfs_env, imfs_freq = hht.hilbert_huang(x, fs, num_imf=3)
+```
+
+ 
+
 **Dependencies**  numpy, scipy, torch, matplotlib
 
 
 
 **Update**
 
-2020.10.17 Bug fix. Use pytorch to support tensor computation on GPU.
+2021.06.20 
+
+* Fix some bugs.
+* Organize the code more elegantly. 
+* Change the colormap of the spectrum.
+* Use pytorch to compute cubic Hermite spline. Now the whole HHT are purely based on pytorch tensor computation, so it can be accelerated using GPU.
+
+2020.10.17 Fix some bugs. Make use of pytorch to partly support tensor computation on GPU.
 
 
 
