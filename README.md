@@ -43,7 +43,7 @@ The above algorithm is call empirical mode decomposition (EMD) by [1]. Then, the
 
 ## Implementation
 
-We implement the Hilbert-Huang transform in *python*. The main algorithm is implement in [hht.py](hht.py). 
+We implement the Hilbert-Huang transform in *python*. The main HHT algorithm is implement in [torchHHT/hht.py](torchHHT/hht.py). [torchHHT/visualization.py](torchHHT/visualization.py) provide functions to plot the extracted IMFs and the resulting Hilbert spectrum.
 
 The example of the mixing chirps shown above is given in the *Jupyter notebook* [demo.ipynb](demo.ipynb). 
 
