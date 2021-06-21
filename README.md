@@ -33,17 +33,17 @@ The above algorithm is call empirical mode decomposition (EMD) by [1]. Then, the
 >
 > ![EMD](img/EMD.png)
 >
-> Now let's further visualize the time-frequency spectrum. We discard the spectrum in the first and last 0.25s since the endpoint effect would severely corrupt the low-frequency components in the spectrum.
+> Now let's further visualize the time-frequency distribution. We first demodulate the IMFs ( i.e. compute their instantaneous amplitude and frequency function) using Hilbert transform, and thus obtain the Hilbert spectrum as follows.
 >
 > ![Hilbert_spectrum](img/Hilbert_spectrum+marginal.png)
 >
-> In the illustration, the variation of frequencies over time can be clearly seen and consistent with our configuration - one increases linearly from 40Hz, reaching 50Hz at 1.2s, and the other increases quadratically from 5Hz, reaching 10Hz at 0.8s. From the color map one can observe that both of their amplitudes are modulated by a Gaussian envelope. In terms of the marginal spectrum, it also show two peaks of the frequency distribution, very similar to the Fourier transform result. 
+> In the Hilbert spectrum, the variation of frequencies over time can be clearly seen and consistent with our configuration - one increases linearly from 40Hz, reaching 50Hz at 1.2s, and the other increases quadratically from 5Hz, reaching 10Hz at 0.8s. From the color map one can observe that both of their amplitudes are modulated by a Gaussian envelope. The time and frequency resolution of the energy distribution is much higher than the traditional spectrogram. In terms of the marginal spectrum, it also show two peaks of the frequency distribution, very similar to the Fourier transform result. 
 
 
 
 ## Implementation
 
-We implement the Hilbert-Huang transform in *python*. The main HHT algorithm is implement in [torchHHT/hht.py](torchHHT/hht.py). [torchHHT/visualization.py](torchHHT/visualization.py) provide functions to plot the extracted IMFs and the resulting Hilbert spectrum.
+We implement the Hilbert-Huang transform in *python*. The main HHT algorithm is implement in [torchHHT/hht.py](torchHHT/hht.py). [torchHHT/visualization.py](torchHHT/visualization.py) provides functions to plot the extracted IMFs and the resulting Hilbert spectrum.
 
 The example of the mixing chirps shown above is given in the *Jupyter notebook* [demo.ipynb](demo.ipynb). 
 
